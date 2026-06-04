@@ -23,3 +23,6 @@ connectDB();
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
+app.use("/api/products", require("./routes/productRoutes"));
