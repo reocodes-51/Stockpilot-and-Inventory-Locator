@@ -23,9 +23,10 @@ function WarehouseMap() {
   const findShelf = () => {
   const product = products.find(
     (p) =>
-      p.name.toLowerCase() ===
-      searchTerm.toLowerCase()
-  );
+        p.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
 
   if (product) {
     setSelectedShelf(product.shelf);
@@ -60,7 +61,19 @@ function WarehouseMap() {
         <h2>
         Located at Shelf {selectedShelf}
         </h2>
-    )}
+        )}
+
+        {selectedShelf && (
+        <p>
+            Product found successfully
+        </p>
+        )}
+
+        
+
+        <div>
+        {/* Warehouse Grid */}
+        </div>
 
       <div
         style={{
@@ -70,17 +83,27 @@ function WarehouseMap() {
           marginTop: "20px",
         }}
       >
-        {shelves.map((shelf) => (
-          <div
+       {shelves.map((shelf) => (
+        <div
             key={shelf}
             style={{
-              border: "1px solid black",
-              padding: "30px",
-              textAlign: "center",
+            border: "1px solid black",
+            padding: "30px",
+            textAlign: "center",
+
+            backgroundColor:
+                shelf === selectedShelf
+                ? "red"
+                : "transparent",
+
+            color:
+                shelf === selectedShelf
+                ? "white"
+                : "inherit",
             }}
-          >
+        >
             {shelf}
-          </div>
+        </div>
         ))}
       </div>
     </div>
