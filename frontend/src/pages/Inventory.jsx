@@ -16,6 +16,15 @@ function Inventory() {
     console.error(error);
   }
 };
+const deleteProduct = async (id) => {
+  try {
+    await API.delete(`/products/${id}`);
+
+    fetchProducts();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const addProduct = async (productData) => {
   try {
@@ -40,13 +49,14 @@ const addProduct = async (productData) => {
       <ProductForm onAddProduct={addProduct} />
       <table border="1">
         <thead>
-          <tr>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Shelf</th>
-          </tr>
+        <tr>
+          <th>Product ID</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Quantity</th>
+          <th>Shelf</th>
+          <th>Action</th>
+        </tr>
         </thead>
 
         <tbody>
@@ -57,7 +67,15 @@ const addProduct = async (productData) => {
               <td>{product.category}</td>
               <td>{product.quantity}</td>
               <td>{product.shelf}</td>
-            </tr>
+
+                          <td>
+                <button
+                  onClick={() => deleteProduct(product._id)}
+                >
+                  Delete
+                </button>
+              </td>
+              </tr>
           ))}
         </tbody>
       </table>
