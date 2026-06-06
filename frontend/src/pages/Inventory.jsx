@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import ProductForm from "../components/ProductForm";
+import ProductQR from "../components/ProductQR";
 
 function Inventory() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null); 
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -133,25 +135,28 @@ function Inventory() {
               <td>{product.quantity}</td>
               <td>{product.shelf}</td>
 
-              <td>
-                <button
-                  onClick={() => editProduct(product)}
-                >
-                  Edit
-                </button>
+          <td>
+            <button onClick={() => editProduct(product)}>
+              Edit
+            </button>
 
-                <button
-                  onClick={() =>
-                    deleteProduct(product._id)
-                  }
-                >
-                  Delete
-                </button>
-              </td>
+            <button onClick={() => deleteProduct(product._id)}>
+              Delete
+            </button>
+
+            <button
+              onClick={() => setSelectedProduct(product)}
+            >
+              QR
+            </button>
+          </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+        <ProductQR product={selectedProduct} />
+
     </div>
   );
 }
