@@ -5,6 +5,7 @@ import ProductForm from "../components/ProductForm";
 function Inventory() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch all products
   const fetchProducts = async () => {
@@ -66,6 +67,10 @@ function Inventory() {
     fetchProducts();
   }, []);
 
+  const filteredProducts = products.filter((product) =>
+  product.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
   return (
     <div>
       <h1>Inventory</h1>
@@ -94,6 +99,17 @@ function Inventory() {
           </button>
         </div>
       )}
+        <h2>Search Product</h2>
+        <p>
+          Total Products Found: {filteredProducts.length}
+        </p>
+
+        <input
+          type="text"
+          placeholder="Search by product name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
       {/* Product Table */}
       <table border="1">
@@ -109,7 +125,7 @@ function Inventory() {
         </thead>
 
         <tbody>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <tr key={product._id}>
               <td>{product.productId}</td>
               <td>{product.name}</td>
