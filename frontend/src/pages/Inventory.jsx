@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import ProductForm from "../components/ProductForm";
 
 function Inventory() {
   const [products, setProducts] = useState([]);
@@ -16,6 +17,16 @@ function Inventory() {
   }
 };
 
+const addProduct = async (productData) => {
+  try {
+    await API.post("/products", productData);
+
+    fetchProducts();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -26,6 +37,7 @@ function Inventory() {
     <div>
       <h1>Inventory</h1>
 
+      <ProductForm onAddProduct={addProduct} />
       <table border="1">
         <thead>
           <tr>
@@ -54,3 +66,4 @@ function Inventory() {
 }
 
 export default Inventory;
+
