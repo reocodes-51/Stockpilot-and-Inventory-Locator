@@ -161,7 +161,7 @@ function Inventory() {
                 >
                   QR
                 </button>
-              </td>
+              </td>g
             </tr>
           ))}
         </tbody>

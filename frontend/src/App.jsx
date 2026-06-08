@@ -3,14 +3,17 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Inventory from "./pages/Inventory";
 import WarehouseMap from "./pages/WarehouseMap";
 import Dashboard from "./pages/Dashboard";
-import QRScanner from "./pages/QRScanner";
+import OrderFulfillment from "./pages/OrderFulfillment";
 
 function App() {
   return (
     <BrowserRouter>
       <div style={{ padding: "20px" }}>
         <nav style={{ marginBottom: "20px" }}>
-          <Link to="/" style={{ marginRight: "20px" }}>
+          <Link
+            to="/"
+            style={{ marginRight: "20px" }}
+          >
             Warehouse Locator
           </Link>
 
@@ -20,26 +23,36 @@ function App() {
           >
             Inventory
           </Link>
+          <Link
+            to="/orders"
+            style={{ marginRight: "20px" }}
+          >
+            Orders
+          </Link>
 
           <Link to="/dashboard">
             Dashboard
           </Link>
         </nav>
 
-        <Link
-          to="/scanner"
-          style={{ marginRight: "20px" }}
-        >
-          QR Scanner
-        </Link>
-
         <Routes>
-          <Route path="/" element={<WarehouseMap />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route
-            path="/scanner"
-            element={<QRScanner />}
+            path="/"
+            element={<WarehouseMap />}
+          />
+
+          <Route
+            path="/inventory"
+            element={<Inventory />}
+          />
+          <Route
+            path="/orders"
+            element={<OrderFulfillment />}
+          />
+
+          <Route
+            path="/dashboard"
+            element={<Dashboard />}
           />
         </Routes>
       </div>
