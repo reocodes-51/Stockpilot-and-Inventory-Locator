@@ -39,7 +39,7 @@ function Inventory() {
     }
   };
 
-  // Open edit form
+  // Edit product
   const editProduct = (product) => {
     setEditingProduct(product);
   };
@@ -64,7 +64,9 @@ function Inventory() {
   }, []);
 
   const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    product.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -90,14 +92,19 @@ function Inventory() {
             }
           />
 
-          <button onClick={saveUpdate}>
+          <button
+            style={{ marginLeft: "10px" }}
+            onClick={saveUpdate}
+          >
             Save
           </button>
         </div>
       )}
 
       {/* Search */}
-      <h2>Search Product</h2>
+      <h2 style={{ marginTop: "20px" }}>
+        Search Product
+      </h2>
 
       <p>
         Total Products Found: {filteredProducts.length}
@@ -107,7 +114,9 @@ function Inventory() {
         type="text"
         placeholder="Search by product name..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) =>
+          setSearchTerm(e.target.value)
+        }
       />
 
       {/* Product Table */}
@@ -141,15 +150,25 @@ function Inventory() {
 
               <td>
                 <button
-                  onClick={() => editProduct(product)}
+                  style={{ marginRight: "5px" }}
+                  onClick={() =>
+                    editProduct(product)
+                  }
                 >
                   Edit
                 </button>
 
                 <button
-                  onClick={() =>
-                    deleteProduct(product._id)
-                  }
+                  style={{ marginRight: "5px" }}
+                  onClick={() => {
+                    if (
+                      window.confirm(
+                        "Are you sure you want to delete this product?"
+                      )
+                    ) {
+                      deleteProduct(product._id);
+                    }
+                  }}
                 >
                   Delete
                 </button>
@@ -161,7 +180,7 @@ function Inventory() {
                 >
                   QR
                 </button>
-              </td>g
+              </td>
             </tr>
           ))}
         </tbody>
