@@ -67,7 +67,15 @@ function Dashboard() {
       width: "200px",
     }}
   >
-    <h2>Low Stock Items</h2>
+    <h2>Low Stock Products</h2>
+
+    <ul>
+      {lowStockProducts.map((product) => (
+        <li key={product._id}>
+          {product.name} ({product.quantity})
+        </li>
+      ))}
+    </ul>
     <h1>{lowStockProducts.length}</h1>
   </div>
   </div>
