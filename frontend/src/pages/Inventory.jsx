@@ -7,15 +7,12 @@ function Inventory() {
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState(null); 
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Fetch all products
   const fetchProducts = async () => {
     try {
       const res = await API.get("/products");
-
-      console.log("Products:", res.data);
-
       setProducts(res.data);
     } catch (error) {
       console.error(error);
@@ -26,7 +23,6 @@ function Inventory() {
   const addProduct = async (productData) => {
     try {
       await API.post("/products", productData);
-
       fetchProducts();
     } catch (error) {
       console.error(error);
@@ -37,7 +33,6 @@ function Inventory() {
   const deleteProduct = async (id) => {
     try {
       await API.delete(`/products/${id}`);
-
       fetchProducts();
     } catch (error) {
       console.error(error);
@@ -58,7 +53,6 @@ function Inventory() {
       );
 
       setEditingProduct(null);
-
       fetchProducts();
     } catch (error) {
       console.error(error);
@@ -70,19 +64,19 @@ function Inventory() {
   }, []);
 
   const filteredProducts = products.filter((product) =>
-  product.name.toLowerCase().includes(searchTerm.toLowerCase())
-);
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div>
-      <h1>Inventory</h1>
+    <div style={{ padding: "20px" }}>
+      <h1>Inventory Management</h1>
 
       {/* Add Product Form */}
       <ProductForm onAddProduct={addProduct} />
 
       {/* Edit Product Section */}
       {editingProduct && (
-        <div>
+        <div style={{ marginTop: "20px" }}>
           <h2>Edit Product</h2>
 
           <input
@@ -101,20 +95,30 @@ function Inventory() {
           </button>
         </div>
       )}
-        <h2>Search Product</h2>
-        <p>
-          Total Products Found: {filteredProducts.length}
-        </p>
 
-        <input
-          type="text"
-          placeholder="Search by product name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      {/* Search */}
+      <h2>Search Product</h2>
+
+      <p>
+        Total Products Found: {filteredProducts.length}
+      </p>
+
+      <input
+        type="text"
+        placeholder="Search by product name..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       {/* Product Table */}
-      <table border="1">
+      <table
+        border="1"
+        style={{
+          width: "100%",
+          marginTop: "20px",
+          borderCollapse: "collapse",
+        }}
+      >
         <thead>
           <tr>
             <th>Product ID</th>
@@ -122,7 +126,7 @@ function Inventory() {
             <th>Category</th>
             <th>Quantity</th>
             <th>Shelf</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -135,28 +139,38 @@ function Inventory() {
               <td>{product.quantity}</td>
               <td>{product.shelf}</td>
 
-          <td>
-            <button onClick={() => editProduct(product)}>
-              Edit
-            </button>
+              <td>
+                <button
+                  onClick={() => editProduct(product)}
+                >
+                  Edit
+                </button>
 
-            <button onClick={() => deleteProduct(product._id)}>
-              Delete
-            </button>
+                <button
+                  onClick={() =>
+                    deleteProduct(product._id)
+                  }
+                >
+                  Delete
+                </button>
 
-            <button
-              onClick={() => setSelectedProduct(product)}
-            >
-              QR
-            </button>
-          </td>
+                <button
+                  onClick={() =>
+                    setSelectedProduct(product)
+                  }
+                >
+                  QR
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
+      {/* QR Code Section */}
+      <div style={{ marginTop: "30px" }}>
         <ProductQR product={selectedProduct} />
-
+      </div>
     </div>
   );
 }
