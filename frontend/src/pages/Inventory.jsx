@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 import ProductForm from "../components/ProductForm";
 import ProductQR from "../components/ProductQR";
+import "./Inventory.css";
 
 function Inventory() {
   const [products, setProducts] = useState([]);
@@ -9,7 +10,6 @@ function Inventory() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Fetch all products
   const fetchProducts = async () => {
     try {
       const res = await API.get("/products");
@@ -19,7 +19,6 @@ function Inventory() {
     }
   };
 
-  // Add product
   const addProduct = async (productData) => {
     try {
       await API.post("/products", productData);
@@ -29,7 +28,6 @@ function Inventory() {
     }
   };
 
-  // Delete product
   const deleteProduct = async (id) => {
     try {
       await API.delete(`/products/${id}`);
@@ -39,12 +37,10 @@ function Inventory() {
     }
   };
 
-  // Edit product
   const editProduct = (product) => {
     setEditingProduct(product);
   };
 
-  // Save updated product
   const saveUpdate = async () => {
     try {
       await API.put(
@@ -63,23 +59,62 @@ function Inventory() {
     fetchProducts();
   }, []);
 
-  const filteredProducts = products.filter((product) =>
-    product.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      product.productId
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      product.category
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
   );
 
+  const getStatus = (quantity) => {
+    if (quantity < 10) return "Low";
+    if (quantity < 25) return "Medium";
+    return "Good";
+  };
+
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Inventory Management</h1>
+    <div className="inventory-page">
 
-      {/* Add Product Form */}
-      <ProductForm onAddProduct={addProduct} />
+      {/* HEADER */}
+      <div className="inventory-header">
+        <div>
+          <h1>Inventory</h1>
+          <p>{products.length} products tracked</p>
+        </div>
+      </div>
 
-      {/* Edit Product Section */}
+      {/* ADD PRODUCT FORM */}
+      <div className="form-section">
+        <ProductForm onAddProduct={addProduct} />
+      </div>
+
+      {/* SEARCH */}
+      <div className="top-controls">
+
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Search name, ID, category..."
+          value={searchTerm}
+          onChange={(e) =>
+            setSearchTerm(e.target.value)
+          }
+        />
+
+      </div>
+
+      {/* EDIT SECTION */}
+
       {editingProduct && (
-        <div style={{ marginTop: "20px" }}>
-          <h2>Edit Product</h2>
+        <div className="edit-box">
+
+          <h3>Edit Product Quantity</h3>
 
           <input
             type="number"
@@ -93,103 +128,120 @@ function Inventory() {
           />
 
           <button
-            style={{ marginLeft: "10px" }}
+            className="save-btn"
             onClick={saveUpdate}
           >
-            Save
+            Save Changes
           </button>
+
         </div>
       )}
 
-      {/* Search */}
-      <h2 style={{ marginTop: "20px" }}>
-        Search Product
-      </h2>
+      {/* TABLE */}
 
-      <p>
-        Total Products Found: {filteredProducts.length}
-      </p>
+      <div className="table-wrapper">
 
-      <input
-        type="text"
-        placeholder="Search by product name..."
-        value={searchTerm}
-        onChange={(e) =>
-          setSearchTerm(e.target.value)
-        }
-      />
+        <table className="inventory-table">
 
-      {/* Product Table */}
-      <table
-        border="1"
-        style={{
-          width: "100%",
-          marginTop: "20px",
-          borderCollapse: "collapse",
-        }}
-      >
-        <thead>
-          <tr>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Quantity</th>
-            <th>Shelf</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {filteredProducts.map((product) => (
-            <tr key={product._id}>
-              <td>{product.productId}</td>
-              <td>{product.name}</td>
-              <td>{product.category}</td>
-              <td>{product.quantity}</td>
-              <td>{product.shelf}</td>
-
-              <td>
-                <button
-                  style={{ marginRight: "5px" }}
-                  onClick={() =>
-                    editProduct(product)
-                  }
-                >
-                  Edit
-                </button>
-
-                <button
-                  style={{ marginRight: "5px" }}
-                  onClick={() => {
-                    if (
-                      window.confirm(
-                        "Are you sure you want to delete this product?"
-                      )
-                    ) {
-                      deleteProduct(product._id);
-                    }
-                  }}
-                >
-                  Delete
-                </button>
-
-                <button
-                  onClick={() =>
-                    setSelectedProduct(product)
-                  }
-                >
-                  QR
-                </button>
-              </td>
+          <thead>
+            <tr>
+              <th>PRODUCT ID</th>
+              <th>NAME</th>
+              <th>CATEGORY</th>
+              <th>QTY</th>
+              <th>LOCATION</th>
+              <th>STATUS</th>
+              <th>ACTIONS</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
 
-      {/* QR Code Section */}
-      <div style={{ marginTop: "30px" }}>
-        <ProductQR product={selectedProduct} />
+          <tbody>
+
+            {filteredProducts.map((product) => (
+              <tr key={product._id}>
+
+                <td>{product.productId}</td>
+
+                <td>
+                  <strong>{product.name}</strong>
+                </td>
+
+                <td>
+                  <span className="category-badge">
+                    {product.category}
+                  </span>
+                </td>
+
+                <td>
+                  <strong>{product.quantity}</strong>
+                </td>
+
+                <td>{product.shelf}</td>
+
+                <td>
+                  <span
+                    className={`status-${getStatus(
+                      product.quantity
+                    ).toLowerCase()}`}
+                  >
+                    ● {getStatus(product.quantity)}
+                  </span>
+                </td>
+
+                <td>
+
+                  <button
+                    className="action-btn edit-btn"
+                    onClick={() =>
+                      editProduct(product)
+                    }
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="action-btn delete-btn"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Delete this product?"
+                        )
+                      ) {
+                        deleteProduct(product._id);
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+
+                  <button
+                    className="action-btn qr-btn"
+                    onClick={() =>
+                      setSelectedProduct(product)
+                    }
+                  >
+                    QR
+                  </button>
+
+                </td>
+
+              </tr>
+            ))}
+
+          </tbody>
+
+        </table>
+
       </div>
+
+      {/* QR SECTION */}
+
+      <div className="qr-section">
+
+        <ProductQR product={selectedProduct} />
+
+      </div>
+
     </div>
   );
 }

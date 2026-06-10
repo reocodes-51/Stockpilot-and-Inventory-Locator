@@ -1,130 +1,33 @@
-// import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// import Inventory from "./pages/Inventory";
-// import WarehouseMap from "./pages/WarehouseMap";
-// import Dashboard from "./pages/Dashboard";
-// import OrderFulfillment from "./pages/OrderFulfillment";
-
-// function App() {
-//   return (
-//     <BrowserRouter>
-//       <div style={{ padding: "20px" }}>
-//         <nav style={{ marginBottom: "20px" }}>
-//           <Link
-//             to="/"
-//             style={{ marginRight: "20px" }}
-//           >
-//             Warehouse Locator
-//           </Link>
-
-//           <Link
-//             to="/inventory"
-//             style={{ marginRight: "20px" }}
-//           >
-//             Inventory
-//           </Link>
-//           <Link
-//             to="/orders"
-//             style={{ marginRight: "20px" }}
-//           >
-//             Orders
-//           </Link>
-
-//           <Link to="/dashboard">
-//             Dashboard
-//           </Link>
-//         </nav>
-
-//         <Routes>
-//           <Route
-//             path="/"
-//             element={<WarehouseMap />}
-//           />
-
-//           <Route
-//             path="/inventory"
-//             element={<Inventory />}
-//           />
-//           <Route
-//             path="/orders"
-//             element={<OrderFulfillment />}
-//           />
-
-//           <Route
-//             path="/dashboard"
-//             element={<Dashboard />}
-//           />
-//         </Routes>
-//       </div>
-//     </BrowserRouter>
-//   );
-// }
-
-// export default App;
-
-
-// import Login from "./pages/Login";
-
-// function App() {
-//   return <Login />;
-// }
-
-// export default App;
-
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-
-import Inventory from "./pages/Inventory";
-import WarehouseMap from "./pages/WarehouseMap";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import OrderFulfillment from "./pages/OrderFulfillment";
+import Inventory from "./pages/Inventory";
 
 function MyApp() {
   return (
     <BrowserRouter>
-      <div style={{ padding: "20px" }}>
-        <nav style={{ marginBottom: "20px" }}>
-          <Link to="/" style={{ marginRight: "20px" }}>
-            Warehouse Locator
-          </Link>
+      <Routes>
 
-          <Link
-            to="/inventory"
-            style={{ marginRight: "20px" }}
-          >
-            Inventory
-          </Link>
+        {/* Login */}
+        <Route
+          path="/"
+          element={<Login />}
+        />
 
-          <Link
-            to="/orders"
-            style={{ marginRight: "20px" }}
-          >
-            Orders
-          </Link>
+        {/* Dashboard */}
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
 
-          <Link to="/dashboard">
-            Dashboard
-          </Link>
-        </nav>
+        {/* Inventory */}
+        <Route
+          path="/inventory"
+          element={<Inventory />}
+        />
 
-        <Routes>
-          <Route path="/" element={<WarehouseMap />} />
-
-          <Route
-            path="/inventory"
-            element={<Inventory />}
-          />
-
-          <Route
-            path="/orders"
-            element={<OrderFulfillment />}
-          />
-
-          <Route
-            path="/dashboard"
-            element={<Dashboard />}
-          />
-        </Routes>
-      </div>
+      </Routes>
     </BrowserRouter>
   );
 }
