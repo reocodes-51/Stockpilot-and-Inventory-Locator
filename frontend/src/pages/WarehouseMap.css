@@ -1,0 +1,145 @@
+.warehouse-page {
+  min-height: 100vh;
+  background: #020817;
+  color: white;
+  padding: 30px;
+}
+
+.warehouse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.warehouse-header p {
+  color: #94a3b8;
+}
+
+.search-area {
+  display: flex;
+  gap: 10px;
+}
+
+.warehouse-search {
+  width: 280px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+}
+
+.locate-btn {
+  background: #2563eb;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.selected-info {
+  margin-top: 20px;
+  padding: 15px;
+  background: #0f172a;
+  border-radius: 12px;
+}
+
+.legend {
+  display: flex;
+  gap: 25px;
+  margin: 25px 0;
+}
+
+.legend div {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.legend-box {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+}
+
+.legend-box.good {
+  background: #10b981;
+}
+
+.legend-box.medium {
+  background: #f59e0b;
+}
+
+.legend-box.low {
+  background: #ef4444;
+}
+
+.legend-box.empty {
+  background: #475569;
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.warehouse-card {
+  background: #0f172a;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #1e293b;
+}
+
+.section-header {
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  background: #16223d;
+}
+
+.shelf-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  padding: 20px;
+}
+
+.shelf {
+  height: 80px;
+  border-radius: 12px;
+  border: 2px solid #334155;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.shelf.good {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.shelf.medium {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.shelf.low {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.shelf.empty {
+  color: #64748b;
+}
+
+.shelf.selected {
+  box-shadow: 0 0 15px #2563eb;
+  transform: scale(1.05);
+}
+
+.shelf small {
+  font-size: 10px;
+}

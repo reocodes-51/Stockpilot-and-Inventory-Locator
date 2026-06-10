@@ -89,52 +89,54 @@ function Dashboard() {
     <div className="dashboard">
 
       {/* Sidebar */}
-      <div className="sidebar">
+      {/* Sidebar */}
+        <div className="sidebar">
 
-        <div className="logo">
-          🏭 AI Warehouse
-        </div>
-
-        <div className="menu-item active">
-          <FiGrid />
-          Dashboard
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() =>
-            navigate("/inventory")
-          }
-        >
-          <FiPackage />
-          Inventory
-        </div>
-
-        <div className="menu-item">
-          <FiMap />
-          Warehouse Map
-        </div>
-
-        <div className="menu-item">
-          <FiBarChart2 />
-          Analytics
-        </div>
-
-        <div className="menu-item">
-          <FiSettings />
-          Settings
-        </div>
-
-        <div className="profile">
-          <div className="avatar">A</div>
-
-          <div>
-            <h4>Admin</h4>
-            <p>Warehouse Manager</p>
+          <div className="logo">
+            🏭 AI Warehouse
           </div>
-        </div>
 
-      </div>
+          <div className="menu-item active">
+            <FiGrid />
+            Dashboard
+          </div>
+
+          <div
+            className="menu-item"
+            onClick={() => navigate("/inventory")}
+          >
+            <FiPackage />
+            Inventory
+          </div>
+
+          <div
+            className="menu-item"
+            onClick={() => navigate("/warehouse-map")}
+          >
+            <FiMap />
+            Warehouse Map
+          </div>
+
+          <div className="menu-item">
+            <FiBarChart2 />
+            Analytics
+          </div>
+
+          <div className="menu-item">
+            <FiSettings />
+            Settings
+          </div>
+
+          <div className="profile">
+            <div className="avatar">A</div>
+
+            <div>
+              <h4>Admin</h4>
+              <p>Warehouse Manager</p>
+            </div>
+          </div>
+
+        </div>
 
       {/* Main */}
       <div className="main">

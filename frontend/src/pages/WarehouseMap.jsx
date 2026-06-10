@@ -1,110 +1,180 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-
+import "./WarehouseMap.css";
 
 function WarehouseMap() {
+  const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedShelf, setSelectedShelf] = useState("");
 
-    const [products, setProducts] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedShelf, setSelectedShelf] = useState("");
-
-    const fetchProducts = async () => {
-    try {
-        const res = await API.get("/products");
-        setProducts(res.data);
-    } catch (error) {
-        console.error(error);
-    }
-    };
-
-    useEffect(() => {
+  useEffect(() => {
     fetchProducts();
   }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await API.get("/products");
+      setProducts(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const findShelf = () => {
-  const product = products.find(
-    (p) =>
+    const product = products.find(
+      (p) =>
         p.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        p.productId
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
     );
 
-  if (product) {
-    setSelectedShelf(product.shelf);
-  } else {
-    alert("Product not found");
-  }
-};
+    if (product) {
+      setSelectedShelf(product.shelf);
+    } else {
+      alert("Product not found");
+      setSelectedShelf("");
+    }
+  };
 
+  const sections = ["A", "B", "C", "D"];
 
+  const getShelfProduct = (shelfCode) => {
+    return products.find(
+      (product) => product.shelf === shelfCode
+    );
+  };
 
-  const shelves = [
-    "A1", "A2", "A3",
-    "B1", "B2", "B3",
-    "C1", "C2", "C3",
-  ];
+  const getShelfClass = (product) => {
+    if (!product) return "empty";
+
+    if (product.quantity < 10) return "low";
+
+    if (product.quantity < 25) return "medium";
+
+    return "good";
+  };
 
   return (
-    <div>
-      <h1>Warehouse Locator</h1>
-      <input
-        type="text"
-        placeholder="Search Product"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+    <div className="warehouse-page">
 
-        <button onClick={findShelf}>
-        Locate Product
-        </button>
+      <div className="warehouse-header">
+        <div>
+          <h1>Warehouse Map</h1>
+          <p>
+            Visual layout of all product locations
+          </p>
+        </div>
 
-        {selectedShelf && (
-        <h2>
-        Located at Shelf {selectedShelf}
-        </h2>
-        )}
+        <div className="search-area">
+          <input
+            className="warehouse-search"
+            type="text"
+            placeholder="Find product location..."
+            value={searchTerm}
+            onChange={(e) =>
+              setSearchTerm(e.target.value)
+            }
+          />
 
-        {selectedShelf && (
-        <p>
-            Product found successfully
-        </p>
-        )}
+          <button
+            className="locate-btn"
+            onClick={findShelf}
+          >
+            Locate
+          </button>
+        </div>
+      </div>
 
-        
+      {selectedShelf && (
+        <div className="selected-info">
+          Product Located at Shelf:
+          <strong> {selectedShelf}</strong>
+        </div>
+      )}
+
+      <div className="legend">
+        <div>
+          <span className="legend-box good"></span>
+          Good Stock
+        </div>
 
         <div>
-        {/* Warehouse Grid */}
+          <span className="legend-box medium"></span>
+          Medium Stock
         </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 100px)",
-          gap: "10px",
-          marginTop: "20px",
-        }}
-      >
-       {shelves.map((shelf) => (
-        <div
-            key={shelf}
-            style={{
-            border: "1px solid black",
-            padding: "30px",
-            textAlign: "center",
-
-            backgroundColor:
-                shelf === selectedShelf
-                ? "red"
-                : "transparent",
-
-            color:
-                shelf === selectedShelf
-                ? "white"
-                : "inherit",
-            }}
-        >
-            {shelf}
+        <div>
+          <span className="legend-box low"></span>
+          Low Stock
         </div>
+
+        <div>
+          <span className="legend-box empty"></span>
+          Empty
+        </div>
+      </div>
+
+      <div className="section-grid">
+
+        {sections.map((section) => (
+          <div
+            key={section}
+            className="warehouse-card"
+          >
+            <div className="section-header">
+              <h2>Section {section}</h2>
+              <span>25 Shelves</span>
+            </div>
+
+            <div className="shelf-grid">
+
+              {[1, 2, 3, 4, 5].map((row) =>
+                [1, 2, 3, 4, 5].map((col) => {
+                  const shelfCode =
+                    `${section}-${row}-${col}`;
+
+                  const product =
+                    getShelfProduct(shelfCode);
+
+                  const isSelected =
+                    selectedShelf === shelfCode;
+
+                  return (
+                    <div
+                      key={shelfCode}
+                      className={`shelf ${getShelfClass(
+                        product
+                      )} ${
+                        isSelected
+                          ? "selected"
+                          : ""
+                      }`}
+                    >
+                      {product ? (
+                        <>
+                          <div>
+                            {product.quantity}
+                          </div>
+
+                          <small>
+                            {product.productId}
+                          </small>
+                        </>
+                      ) : (
+                        "-"
+                      )}
+                    </div>
+                  );
+                })
+              )}
+
+            </div>
+          </div>
         ))}
+
       </div>
     </div>
   );
