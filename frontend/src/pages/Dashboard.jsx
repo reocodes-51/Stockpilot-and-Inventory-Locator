@@ -35,8 +35,23 @@ const COLORS = [
 function Dashboard() {
   const navigate = useNavigate();
 
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
+
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const loggedUser =
+      localStorage.getItem("user");
+
+    if (!loggedUser) {
+      navigate("/");
+    }
+
+    fetchProducts();
+  }, []);
 
   const fetchProducts = async () => {
     try {
@@ -47,16 +62,21 @@ function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  const logout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(search.toLowerCase())
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name
+        .toLowerCase()
+        .includes(search.toLowerCase())
   );
 
   const totalQuantity = products.reduce(
-    (sum, product) => sum + Number(product.quantity),
+    (sum, product) =>
+      sum + Number(product.quantity),
     0
   );
 
@@ -65,7 +85,9 @@ function Dashboard() {
   );
 
   const totalCategories = new Set(
-    products.map((product) => product.category)
+    products.map(
+      (product) => product.category
+    )
   ).size;
 
   const categoryMap = {};
@@ -75,20 +97,23 @@ function Dashboard() {
       categoryMap[product.category] = 0;
     }
 
-    categoryMap[product.category] += Number(product.quantity);
+    categoryMap[product.category] += Number(
+      product.quantity
+    );
   });
 
-  const chartData = Object.keys(categoryMap).map(
-    (category) => ({
-      category,
-      quantity: categoryMap[category],
-    })
-  );
+  const chartData = Object.keys(
+    categoryMap
+  ).map((category) => ({
+    category,
+    quantity: categoryMap[category],
+  }));
 
   return (
     <div className="dashboard">
 
       {/* Sidebar */}
+
       <div className="sidebar">
 
         <div className="logo">
@@ -102,7 +127,9 @@ function Dashboard() {
 
         <div
           className="menu-item"
-          onClick={() => navigate("/inventory")}
+          onClick={() =>
+            navigate("/inventory")
+          }
         >
           <FiPackage />
           Inventory
@@ -110,7 +137,9 @@ function Dashboard() {
 
         <div
           className="menu-item"
-          onClick={() => navigate("/warehouse-map")}
+          onClick={() =>
+            navigate("/warehouse-map")
+          }
         >
           <FiMap />
           Warehouse Map
@@ -118,7 +147,9 @@ function Dashboard() {
 
         <div
           className="menu-item"
-          onClick={() => navigate("/analytics")}
+          onClick={() =>
+            navigate("/analytics")
+          }
         >
           <FiBarChart2 />
           Analytics
@@ -126,33 +157,50 @@ function Dashboard() {
 
         <div
           className="menu-item"
-          onClick={() => navigate("/settings")}
+          onClick={() =>
+            navigate("/settings")
+          }
         >
           <FiSettings />
           Settings
         </div>
 
         <div className="profile">
-          <div className="avatar">P</div>
+
+          <div className="avatar">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
 
           <div>
-            <h4>Pinsu</h4>
+            <h4>{user?.name}</h4>
             <p>Admin</p>
           </div>
+
         </div>
+
+        <button
+          className="logout-btn"
+          onClick={logout}
+        >
+          Sign Out
+        </button>
 
       </div>
 
-      {/* Main Content */}
+      {/* Main */}
+
       <div className="main">
 
         <div className="topbar">
 
           <div>
-            <h1>Warehouse Dashboard</h1>
+            <h1>
+              Warehouse Dashboard
+            </h1>
 
             <p>
-              Overview of inventory and warehouse operations
+              Overview of inventory and
+              warehouse operations
             </p>
           </div>
 
@@ -167,7 +215,8 @@ function Dashboard() {
 
         </div>
 
-        {/* Statistics Cards */}
+        {/* Cards */}
+
         <div className="cards">
 
           <div className="card">
@@ -182,7 +231,9 @@ function Dashboard() {
 
           <div className="card">
             <p>Low Stock Items</p>
-            <h2>{lowStockProducts.length}</h2>
+            <h2>
+              {lowStockProducts.length}
+            </h2>
           </div>
 
           <div className="card">
@@ -193,6 +244,7 @@ function Dashboard() {
         </div>
 
         {/* Charts */}
+
         <div className="sections">
 
           <div className="panel">
@@ -219,7 +271,9 @@ function Dashboard() {
 
           <div className="panel">
 
-            <h2>Category Distribution</h2>
+            <h2>
+              Category Distribution
+            </h2>
 
             <ResponsiveContainer
               width="100%"
@@ -240,7 +294,8 @@ function Dashboard() {
                         key={index}
                         fill={
                           COLORS[
-                            index % COLORS.length
+                            index %
+                              COLORS.length
                           ]
                         }
                       />
@@ -255,43 +310,56 @@ function Dashboard() {
 
         </div>
 
-        {/* Bottom Panels */}
+        {/* Bottom */}
+
         <div
           className="sections"
-          style={{ marginTop: "20px" }}
+          style={{
+            marginTop: "20px",
+          }}
         >
 
           <div className="panel">
 
             <h2>Low Stock Alerts</h2>
 
-            {lowStockProducts.length === 0 ? (
+            {lowStockProducts.length ===
+            0 ? (
               <p>
-                All products are sufficiently stocked.
+                All products are
+                sufficiently stocked.
               </p>
             ) : (
-              lowStockProducts.map((product) => (
-                <div
-                  key={product._id}
-                  className="low-stock-item"
-                >
-                  <div>
-                    <strong>
-                      {product.name}
-                    </strong>
+              lowStockProducts.map(
+                (product) => (
+                  <div
+                    key={product._id}
+                    className="low-stock-item"
+                  >
+                    <div>
 
-                    <br />
+                      <strong>
+                        {product.name}
+                      </strong>
 
-                    <small>
-                      {product.productId}
-                    </small>
+                      <br />
+
+                      <small>
+                        {
+                          product.productId
+                        }
+                      </small>
+
+                    </div>
+
+                    <span className="low-stock-count">
+                      {product.quantity}
+                      {" "}left
+                    </span>
+
                   </div>
-
-                  <span className="low-stock-count">
-                    {product.quantity} left
-                  </span>
-                </div>
-              ))
+                )
+              )
             )}
 
           </div>
@@ -306,8 +374,10 @@ function Dashboard() {
                 <div
                   key={product._id}
                   style={{
-                    marginBottom: "15px",
-                    paddingBottom: "10px",
+                    marginBottom:
+                      "15px",
+                    paddingBottom:
+                      "10px",
                     borderBottom:
                       "1px solid #1e293b",
                   }}
@@ -321,6 +391,7 @@ function Dashboard() {
                   <small>
                     {product.category}
                   </small>
+
                 </div>
               ))}
 

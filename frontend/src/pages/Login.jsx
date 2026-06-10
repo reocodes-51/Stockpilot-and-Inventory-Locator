@@ -1,18 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../services/api";
 import "./Login.css";
 
 function Login() {
-  const [showPassword, setShowPassword] = useState(false);
-
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Later you will connect backend authentication here
+    try {
+      setLoading(true);
 
-    navigate("/dashboard");
+      const res = await API.post("/auth/login", {
+        email,
+        password,
+      });
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(res.data.user)
+      );
+
+      alert("Login Successful");
+
+      navigate("/dashboard");
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+          "Login Failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -26,8 +52,9 @@ function Login() {
 
         <div className="hero-content">
           <h1>
-            "Intelligent inventory management that keeps your warehouse
-            operations running smoothly."
+            Intelligent inventory management
+            that keeps your warehouse
+            operations running smoothly.
           </h1>
 
           <div className="stats">
@@ -52,14 +79,22 @@ function Login() {
       {/* RIGHT PANEL */}
       <div className="right-panel">
         <div className="login-box">
-          <h1>Welcome back</h1>
-          <p>Sign in to your account</p>
+          <h1>Welcome Back</h1>
+
+          <p>
+            Sign in to your account
+          </p>
 
           <form onSubmit={handleLogin}>
             <label>Email</label>
+
             <input
               type="email"
               placeholder="you@example.com"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
               required
             />
 
@@ -67,14 +102,28 @@ function Login() {
 
             <div className="password-box">
               <input
-                type={showPassword ? "text" : "password"}
+                type={
+                  showPassword
+                    ? "text"
+                    : "password"
+                }
                 placeholder="********"
+                value={password}
+                onChange={(e) =>
+                  setPassword(
+                    e.target.value
+                  )
+                }
                 required
               />
 
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
+                onClick={() =>
+                  setShowPassword(
+                    !showPassword
+                  )
+                }
               >
                 👁
               </button>
@@ -84,12 +133,25 @@ function Login() {
               type="submit"
               className="signin-btn"
             >
-              Sign In
+              {loading
+                ? "Signing In..."
+                : "Sign In"}
             </button>
           </form>
 
           <div className="register-link">
-            Don't have an account? <span>Register</span>
+            Don't have an account?{" "}
+            <span
+              onClick={() =>
+                navigate("/register")
+              }
+              style={{
+                cursor: "pointer",
+                color: "#3b82f6",
+              }}
+            >
+              Register
+            </span>
           </div>
         </div>
       </div>

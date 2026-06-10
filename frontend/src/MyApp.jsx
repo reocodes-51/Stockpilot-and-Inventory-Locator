@@ -6,6 +6,7 @@ import Inventory from "./pages/Inventory";
 import WarehouseMap from "./pages/WarehouseMap";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
+import Register from "./pages/Register";
 
 function MyApp() {
   return (
@@ -13,6 +14,12 @@ function MyApp() {
       <Routes>
         <Route path="/" element={<Login />} />
 
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+        
         <Route
           path="/dashboard"
           element={<Dashboard />}

@@ -227,3 +227,19 @@
     width: 100%;
   }
 }
+
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #ef4444;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  opacity: 0.9;
+}
