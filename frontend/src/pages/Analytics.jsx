@@ -6,23 +6,12 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
   XAxis,
   YAxis,
   Tooltip,
   LineChart,
   Line,
 } from "recharts";
-
-const COLORS = [
-  "#3B82F6",
-  "#10B981",
-  "#F59E0B",
-  "#EF4444",
-  "#8B5CF6",
-];
 
 function Analytics() {
   const [products, setProducts] = useState([]);
@@ -57,32 +46,6 @@ function Analytics() {
       ? inventoryValue / products.length
       : 0;
 
-  const categoryMap = {};
-
-  products.forEach((product) => {
-    if (!categoryMap[product.category]) {
-      categoryMap[product.category] = {
-        value: 0,
-        quantity: 0,
-      };
-    }
-
-    categoryMap[product.category].value +=
-      Number(product.quantity) *
-      Number(product.price || 0);
-
-    categoryMap[product.category].quantity +=
-      Number(product.quantity);
-  });
-
-  const categoryData = Object.keys(categoryMap).map(
-    (category) => ({
-      category,
-      value: categoryMap[category].value,
-      quantity: categoryMap[category].quantity,
-    })
-  );
-
   const topProducts = [...products]
     .sort((a, b) => b.quantity - a.quantity)
     .slice(0, 5);
@@ -113,8 +76,7 @@ function Analytics() {
         <div className="analytics-card">
           <p>Total Inventory Value</p>
           <h2>
-            ₹
-            {inventoryValue.toLocaleString()}
+            ₹{inventoryValue.toLocaleString()}
           </h2>
         </div>
 
@@ -125,87 +87,19 @@ function Analytics() {
 
         <div className="analytics-card">
           <p>Low Stock Alerts</p>
-          <h2>
-            {lowStockProducts.length}
-          </h2>
+          <h2>{lowStockProducts.length}</h2>
         </div>
 
         <div className="analytics-card">
           <p>Average Value/Product</p>
           <h2>
-            ₹
-            {avgValue.toFixed(0)}
+            ₹{avgValue.toFixed(0)}
           </h2>
         </div>
 
       </div>
 
       {/* Charts */}
-
-      <div className="analytics-grid">
-
-        <div className="analytics-panel">
-          <h2>
-            Inventory Value by Category
-          </h2>
-
-          <ResponsiveContainer
-            width="100%"
-            height={300}
-          >
-            <BarChart data={categoryData}>
-              <XAxis dataKey="category" />
-              <YAxis />
-              <Tooltip />
-
-              <Bar
-                dataKey="value"
-                fill="#3B82F6"
-              />
-            </BarChart>
-          </ResponsiveContainer>
-
-        </div>
-
-        <div className="analytics-panel">
-          <h2>
-            Stock Distribution
-          </h2>
-
-          <ResponsiveContainer
-            width="100%"
-            height={300}
-          >
-            <PieChart>
-
-              <Pie
-                data={categoryData}
-                dataKey="quantity"
-                nameKey="category"
-                outerRadius={100}
-                label
-              >
-                {categoryData.map(
-                  (_, index) => (
-                    <Cell
-                      key={index}
-                      fill={
-                        COLORS[
-                          index %
-                            COLORS.length
-                        ]
-                      }
-                    />
-                  )
-                )}
-              </Pie>
-
-            </PieChart>
-          </ResponsiveContainer>
-
-        </div>
-
-      </div>
 
       <div className="analytics-grid">
 
@@ -271,7 +165,6 @@ function Analytics() {
           <thead>
             <tr>
               <th>Product</th>
-              <th>Category</th>
               <th>Qty</th>
               <th>Price</th>
             </tr>
@@ -279,23 +172,27 @@ function Analytics() {
 
           <tbody>
 
-            {lowStockProducts.map(
-              (product) => (
-                <tr key={product._id}>
-                  <td>{product.name}</td>
+            {lowStockProducts.length === 0 ? (
+              <tr>
+                <td colSpan="3">
+                  No low stock products
+                </td>
+              </tr>
+            ) : (
+              lowStockProducts.map(
+                (product) => (
+                  <tr key={product._id}>
+                    <td>{product.name}</td>
 
-                  <td>
-                    {product.category}
-                  </td>
+                    <td>
+                      {product.quantity}
+                    </td>
 
-                  <td>
-                    {product.quantity}
-                  </td>
-
-                  <td>
-                    ₹{product.price}
-                  </td>
-                </tr>
+                    <td>
+                      ₹{product.price || 0}
+                    </td>
+                  </tr>
+                )
               )
             )}
 

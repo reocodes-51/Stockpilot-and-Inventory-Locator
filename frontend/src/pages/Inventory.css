@@ -137,16 +137,6 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* ================= CATEGORY BADGES ================= */
-
-.category-badge {
-  background: rgba(37, 99, 235, 0.15);
-  color: #60a5fa;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
-}
 
 /* ================= STATUS ================= */
 

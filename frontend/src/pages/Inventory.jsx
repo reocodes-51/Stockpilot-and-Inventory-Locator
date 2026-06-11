@@ -77,10 +77,7 @@ function Inventory() {
         .includes(searchTerm.toLowerCase()) ||
       product.productId
         .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      product.category
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
+        .includes(searchTerm.toLowerCase()) 
   );
 
   const getStatus = (quantity) => {
@@ -97,7 +94,7 @@ function Inventory() {
       <div className="sidebar">
 
         <div className="logo">
-          🏭 AI Warehouse
+          📑 Mahakaushal Traders
         </div>
 
         <div
@@ -174,7 +171,7 @@ function Inventory() {
           <input
             className="search-input"
             type="text"
-            placeholder="Search name, ID, category..."
+            placeholder="Search name, ID..."
             value={searchTerm}
             onChange={(e) =>
               setSearchTerm(e.target.value)
@@ -234,7 +231,6 @@ function Inventory() {
               <tr>
                 <th>PRODUCT ID</th>
                 <th>NAME</th>
-                <th>CATEGORY</th>
                 <th>QTY</th>
                 <th>PRICE</th>
                 <th>LOCATION</th>
@@ -254,12 +250,6 @@ function Inventory() {
                     <strong>
                       {product.name}
                     </strong>
-                  </td>
-
-                  <td>
-                    <span className="category-badge">
-                      {product.category}
-                    </span>
                   </td>
 
                   <td>

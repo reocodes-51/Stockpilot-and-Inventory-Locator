@@ -1,44 +1,19 @@
-import { useState } from "react";
 import "./Settings.css";
 
 function Settings() {
-  const [fullName, setFullName] = useState("pinsu");
-  const [email, setEmail] = useState(
-    "payalkanwar4838@gmail.com"
+  const user = JSON.parse(
+    localStorage.getItem("user")
   );
-
-  const saveChanges = () => {
-    alert("Settings saved successfully");
-  };
 
   return (
     <div className="settings-page">
 
       <div className="settings-header">
         <h1>Settings</h1>
+
         <p>
-          Manage your account and preferences
+          Manage your account information
         </p>
-      </div>
-
-      <div className="tabs">
-
-        <button className="tab active">
-          Profile
-        </button>
-
-        <button className="tab">
-          Security
-        </button>
-
-        <button className="tab">
-          Warehouse
-        </button>
-
-        <button className="tab">
-          Notifications
-        </button>
-
       </div>
 
       <div className="settings-card">
@@ -48,15 +23,15 @@ function Settings() {
         <div className="profile-row">
 
           <div className="avatar">
-            P
+            {user?.name
+              ?.charAt(0)
+              .toUpperCase()}
           </div>
 
           <div>
-            <h3>pinsu</h3>
+            <h3>{user?.name}</h3>
 
-            <p>
-              payalkanwar4838@gmail.com
-            </p>
+            <p>{user?.email}</p>
 
             <span className="role">
               Admin
@@ -66,35 +41,32 @@ function Settings() {
         </div>
 
         <div className="form-group">
-          <label>Full Name</label>
+
+          <label>
+            Full Name
+          </label>
 
           <input
             type="text"
-            value={fullName}
-            onChange={(e) =>
-              setFullName(e.target.value)
-            }
+            value={user?.name || ""}
+            readOnly
           />
+
         </div>
 
         <div className="form-group">
-          <label>Email</label>
+
+          <label>
+            Email
+          </label>
 
           <input
             type="email"
-            value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+            value={user?.email || ""}
+            readOnly
           />
-        </div>
 
-        <button
-          className="save-btn"
-          onClick={saveChanges}
-        >
-          Save Changes
-        </button>
+        </div>
 
       </div>
 

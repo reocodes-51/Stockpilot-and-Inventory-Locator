@@ -4,7 +4,6 @@ function ProductForm({ onAddProduct }) {
   const [formData, setFormData] = useState({
     productId: "",
     name: "",
-    category: "",
     quantity: "",
     shelf: "",
     price: "",
@@ -25,7 +24,6 @@ function ProductForm({ onAddProduct }) {
     setFormData({
       productId: "",
       name: "",
-      category: "",
       quantity: "",
       shelf: "",
       price: "",
@@ -52,13 +50,6 @@ function ProductForm({ onAddProduct }) {
         onChange={handleChange}
       />
 
-      <input
-        type="text"
-        name="category"
-        placeholder="Category"
-        value={formData.category}
-        onChange={handleChange}
-      />
 
       <input
         type="number"
