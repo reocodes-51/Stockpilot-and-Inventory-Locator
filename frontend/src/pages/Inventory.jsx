@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import ProductForm from "../components/ProductForm";
 import ProductQR from "../components/ProductQR";
 import "./Inventory.css";
 import Sidebar from "../components/Sidebar";
-
+import React, { useEffect, useState } from "react";
 // import {
 //   FiGrid,
 //   FiPackage,
@@ -187,125 +187,148 @@ function Inventory() {
               <th>ACTIONS</th>
             </tr>
           </thead>
-          <tbody>
+<tbody>
 
-            {filteredProducts.map((product) => (
-              <tr key={product._id}>
+  {filteredProducts.map((product) => (
+    <React.Fragment key={product._id}>
 
-                <td>{product.productId}</td>
+      <tr>
 
-                <td>
-                  <strong>
-                    {product.name}
-                  </strong>
-                </td>
+        <td>{product.productId}</td>
 
-                <td>
-                  {product.quantity}
-                </td>
+        <td>
+          <strong>{product.name}</strong>
+        </td>
 
-                <td>
-                  ₹{product.price || 0}
-                </td>
+        <td>{product.quantity}</td>
 
-                <td>
-                  {product.shelf}
-                </td>
+        <td>₹{product.price || 0}</td>
 
-                <td>
-                  <span
-                    className={`status-${getStatus(
-                      product.quantity
-                    ).toLowerCase()}`}
-                  >
-                    ● {getStatus(product.quantity)}
-                  </span>
-                </td>
+        <td>{product.shelf}</td>
 
-                <td>
-                  {product.createdAt
-                    ? new Date(
-                        product.createdAt
-                      ).toLocaleString("en-IN", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
-                    : "-"}
-                </td>
+        <td>
+          <span
+            className={`status-${getStatus(
+              product.quantity
+            ).toLowerCase()}`}
+          >
+            ● {getStatus(product.quantity)}
+          </span>
+        </td>
 
-                <td>
-                  {product.updatedAt
-                    ? new Date(
-                        product.updatedAt
-                      ).toLocaleString("en-IN", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
-                    : "-"}
-                </td>
+        <td>
+          {product.createdAt
+            ? new Date(
+                product.createdAt
+              ).toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "-"}
+        </td>
 
-                <td>
+        <td>
+          {product.updatedAt
+            ? new Date(
+                product.updatedAt
+              ).toLocaleString("en-IN", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "-"}
+        </td>
 
-                  <button
-                    className="action-btn edit-btn"
-                    onClick={() =>
-                      editProduct(product)
-                    }
-                  >
-                    Edit
-                  </button>
+        <td>
 
-                  <button
-                    className="action-btn delete-btn"
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Delete this product?"
-                        )
-                      ) {
-                        deleteProduct(
-                          product._id
-                        );
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
+          <button
+            className="action-btn edit-btn"
+            onClick={() =>
+              editProduct(product)
+            }
+          >
+            Edit
+          </button>
 
-                  <button
-                    className="action-btn qr-btn"
-                    onClick={() =>
-                      setSelectedProduct(
-                        product
-                      )
-                    }
-                  >
-                    QR
-                  </button>
+          <button
+            className="action-btn delete-btn"
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Delete this product?"
+                )
+              ) {
+                deleteProduct(
+                  product._id
+                );
+              }
+            }}
+          >
+            Delete
+          </button>
 
-                </td>
+          <button
+            className="action-btn qr-btn"
+            onClick={() =>
+              setSelectedProduct(
+                selectedProduct?._id ===
+                  product._id
+                  ? null
+                  : product
+              )
+            }
+          >
+            QR
+          </button>
 
-              </tr>
-            ))}
-    </tbody>
+        </td>
+
+      </tr>
+
+     {/* {selectedProduct?._id === product._id && (
+  <tr>
+    <td colSpan="9">
+      <div
+        style={{
+          color: "white",
+          padding: "20px",
+          background: "red",
+        }}
+      >
+        QR TEST {product.name}
+      </div>
+    </td>
+  </tr>
+)} */}
+
+      {selectedProduct && (
+  <div className="qr-popup">
+
+        <button
+          className="close-qr"
+          onClick={() => setSelectedProduct(null)}
+        >
+          ✖
+        </button>
+
+        <ProductQR product={selectedProduct} />
+
+      </div>
+    )}
+    </React.Fragment>
+  ))}
+
+</tbody>
 
     </table>
 
     </div>
 
-    {/* QR */}
-
-    <div className="qr-section">
-      <ProductQR
-        product={selectedProduct}
-      />
-    </div>
 
     </div>
 
