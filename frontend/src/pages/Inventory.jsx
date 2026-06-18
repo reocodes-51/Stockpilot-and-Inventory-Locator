@@ -4,6 +4,7 @@ import API from "../services/api";
 import ProductForm from "../components/ProductForm";
 import ProductQR from "../components/ProductQR";
 import "./Inventory.css";
+import Sidebar from "../components/Sidebar";
 
 import {
   FiGrid,
@@ -89,61 +90,7 @@ function Inventory() {
   return (
     <div className="dashboard">
 
-      {/* SIDEBAR */}
-
-      <div className="sidebar">
-
-        <div className="logo">
-          📑 Mahakaushal Traders
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() => navigate("/dashboard")}
-        >
-          <FiGrid />
-          Dashboard
-        </div>
-
-        <div className="menu-item active">
-          <FiPackage />
-          Inventory
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() =>
-            navigate("/warehouse-map")
-          }
-        >
-          <FiMap />
-          Warehouse Map
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() => navigate("/analytics")}
-        >
-          <FiBarChart2 />
-          Analytics
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() => navigate("/settings")}
-        >
-          <FiSettings />
-          Settings
-        </div>
-
-        <div
-          className="menu-item logout-item"
-          onClick={() => navigate("/")}
-        >
-          Sign Out
-        </div>
-
-      </div>
+       <Sidebar />
 
       {/* MAIN CONTENT */}
 

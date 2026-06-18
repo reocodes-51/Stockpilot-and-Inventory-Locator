@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import "./WarehouseMap.css";
+import Sidebar from "../components/Sidebar";
 
 function WarehouseMap() {
   const [products, setProducts] = useState([]);
@@ -57,8 +58,14 @@ function WarehouseMap() {
     return "good";
   };
 
+  // return (
+  //   <div className="warehouse-page">
   return (
-    <div className="warehouse-page">
+  <div className="dashboard">
+
+    <Sidebar />
+
+    <div className="main">
 
       <div className="warehouse-header">
         <div>
@@ -176,6 +183,7 @@ function WarehouseMap() {
         ))}
 
       </div>
+       </div>
     </div>
   );
 }

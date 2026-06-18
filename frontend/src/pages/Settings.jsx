@@ -1,12 +1,19 @@
 import "./Settings.css";
+import Sidebar from "../components/Sidebar";
 
 function Settings() {
   const user = JSON.parse(
     localStorage.getItem("user")
   );
 
-  return (
-    <div className="settings-page">
+return (
+  <div className="dashboard">
+
+    <Sidebar />
+
+    <div className="main">
+
+      <div className="settings-page">
 
       <div className="settings-header">
         <h1>Settings</h1>
@@ -68,10 +75,14 @@ function Settings() {
 
         </div>
 
+          </div>
+
       </div>
 
     </div>
-  );
+
+  </div>
+);
 }
 
 export default Settings;

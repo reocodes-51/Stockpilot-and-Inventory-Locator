@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import "./Analytics.css";
+import Sidebar from "../components/Sidebar";
 
 import {
   ResponsiveContainer,
@@ -59,8 +60,14 @@ function Analytics() {
     { month: "Jun", added: 24 },
   ];
 
-  return (
-    <div className="analytics-page">
+return (
+  <div className="dashboard">
+
+    <Sidebar />
+
+    <div className="main">
+
+      <div className="analytics-page">
 
       <div className="analytics-header">
         <h1>Analytics</h1>
@@ -202,8 +209,12 @@ function Analytics() {
 
       </div>
 
+      </div>
+
     </div>
-  );
+
+  </div>
+);
 }
 
 export default Analytics;
