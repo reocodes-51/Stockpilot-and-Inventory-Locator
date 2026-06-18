@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import "./Dashboard.css";
+import Sidebar from "../components/Sidebar";
 
-import {
-  FiGrid,
-  FiPackage,
-  FiMap,
-  FiBarChart2,
-  FiSettings,
-} from "react-icons/fi";
+// import {
+//   FiGrid,
+//   FiPackage,
+//   FiMap,
+//   FiBarChart2,
+//   FiSettings,
+// } from "react-icons/fi";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -67,78 +68,7 @@ function Dashboard() {
   return (
     <div className="dashboard">
 
-      {/* Sidebar */}
-      <div className="sidebar">
-
-        <div className="logo">
-          📑 Mahakaushal Traders
-        </div>
-
-        <div className="menu-item active">
-          <FiGrid />
-          Dashboard
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() =>
-            navigate("/inventory")
-          }
-        >
-          <FiPackage />
-          Inventory
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() =>
-            navigate("/warehouse-map")
-          }
-        >
-          <FiMap />
-          Warehouse Map
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() =>
-            navigate("/analytics")
-          }
-        >
-          <FiBarChart2 />
-          Analytics
-        </div>
-
-        <div
-          className="menu-item"
-          onClick={() =>
-            navigate("/settings")
-          }
-        >
-          <FiSettings />
-          Settings
-        </div>
-
-        <div className="profile">
-          <div className="avatar">
-            {user?.name?.charAt(0).toUpperCase()}
-          </div>
-
-          <div>
-            <h4>{user?.name}</h4>
-            <p>Admin</p>
-          </div>
-        </div>
-
-        <button
-          className="logout-btn"
-          onClick={logout}
-        >
-          Sign Out
-        </button>
-
-      </div>
-
+    <Sidebar />
       {/* Main Content */}
       <div className="main">
 
@@ -179,6 +109,20 @@ function Dashboard() {
               {lowStockProducts.length}
             </h2>
           </div>
+
+          <div className="card">
+              <p>Current Streak</p>
+              <h2>
+                {user?.currentStreak || 1} Days
+              </h2>
+            </div>
+
+            <div className="card">
+              <p>Longest Streak</p>
+              <h2>
+                {user?.longestStreak || 1} Days
+              </h2>
+            </div>
 
         </div>
 

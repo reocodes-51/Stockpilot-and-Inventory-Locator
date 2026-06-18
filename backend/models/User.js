@@ -15,7 +15,25 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+
+  currentStreak: {
+    type: Number,
+    default: 1
+  },
+
+  longestStreak: {
+    type: Number,
+    default: 1
+  },
+
+  lastLoginDate: {
+    type: Date,
+    default: Date.now
   }
+
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model(

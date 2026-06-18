@@ -11,6 +11,15 @@ function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+  };
+
   return (
     <div className="sidebar">
 
@@ -78,12 +87,23 @@ function Sidebar() {
         Settings
       </div>
 
-      <div
-        className="menu-item logout-item"
-        onClick={() => navigate("/")}
+      <div className="profile">
+        <div className="avatar">
+          {user?.name?.charAt(0).toUpperCase()}
+        </div>
+
+        <div>
+          <h4>{user?.name}</h4>
+          <p>Admin</p>
+        </div>
+      </div>
+
+      <button
+        className="logout-btn"
+        onClick={logout}
       >
         Sign Out
-      </div>
+      </button>
 
     </div>
   );

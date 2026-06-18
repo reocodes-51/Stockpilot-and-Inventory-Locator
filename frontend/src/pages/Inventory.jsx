@@ -6,16 +6,16 @@ import ProductQR from "../components/ProductQR";
 import "./Inventory.css";
 import Sidebar from "../components/Sidebar";
 
-import {
-  FiGrid,
-  FiPackage,
-  FiMap,
-  FiBarChart2,
-  FiSettings,
-} from "react-icons/fi";
+// import {
+//   FiGrid,
+//   FiPackage,
+//   FiMap,
+//   FiBarChart2,
+//   FiSettings,
+// } from "react-icons/fi";
 
 function Inventory() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
@@ -174,115 +174,143 @@ function Inventory() {
 
           <table className="inventory-table">
 
-            <thead>
-              <tr>
-                <th>PRODUCT ID</th>
-                <th>NAME</th>
-                <th>QTY</th>
-                <th>PRICE</th>
-                <th>LOCATION</th>
-                <th>STATUS</th>
-                <th>ACTIONS</th>
-              </tr>
-            </thead>
+          <thead>
+            <tr>
+              <th>PRODUCT ID</th>
+              <th>NAME</th>
+              <th>QTY</th>
+              <th>PRICE</th>
+              <th>LOCATION</th>
+              <th>STATUS</th>
+              <th>CREATED</th>
+              <th>UPDATED</th>
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
 
-            <tbody>
+            {filteredProducts.map((product) => (
+              <tr key={product._id}>
 
-              {filteredProducts.map((product) => (
-                <tr key={product._id}>
+                <td>{product.productId}</td>
 
-                  <td>{product.productId}</td>
+                <td>
+                  <strong>
+                    {product.name}
+                  </strong>
+                </td>
 
-                  <td>
-                    <strong>
-                      {product.name}
-                    </strong>
-                  </td>
+                <td>
+                  {product.quantity}
+                </td>
 
-                  <td>
-                    {product.quantity}
-                  </td>
+                <td>
+                  ₹{product.price || 0}
+                </td>
 
-                  <td>
-                    ₹{product.price || 0}
-                  </td>
+                <td>
+                  {product.shelf}
+                </td>
 
-                  <td>
-                    {product.shelf}
-                  </td>
+                <td>
+                  <span
+                    className={`status-${getStatus(
+                      product.quantity
+                    ).toLowerCase()}`}
+                  >
+                    ● {getStatus(product.quantity)}
+                  </span>
+                </td>
 
-                  <td>
-                    <span
-                      className={`status-${getStatus(
-                        product.quantity
-                      ).toLowerCase()}`}
-                    >
-                      ● {getStatus(product.quantity)}
-                    </span>
-                  </td>
+                <td>
+                  {product.createdAt
+                    ? new Date(
+                        product.createdAt
+                      ).toLocaleString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "-"}
+                </td>
 
-                  <td>
+                <td>
+                  {product.updatedAt
+                    ? new Date(
+                        product.updatedAt
+                      ).toLocaleString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "-"}
+                </td>
 
-                    <button
-                      className="action-btn edit-btn"
-                      onClick={() =>
-                        editProduct(product)
-                      }
-                    >
-                      Edit
-                    </button>
+                <td>
 
-                    <button
-                      className="action-btn delete-btn"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            "Delete this product?"
-                          )
-                        ) {
-                          deleteProduct(
-                            product._id
-                          );
-                        }
-                      }}
-                    >
-                      Delete
-                    </button>
+                  <button
+                    className="action-btn edit-btn"
+                    onClick={() =>
+                      editProduct(product)
+                    }
+                  >
+                    Edit
+                  </button>
 
-                    <button
-                      className="action-btn qr-btn"
-                      onClick={() =>
-                        setSelectedProduct(
-                          product
+                  <button
+                    className="action-btn delete-btn"
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Delete this product?"
                         )
+                      ) {
+                        deleteProduct(
+                          product._id
+                        );
                       }
-                    >
-                      QR
-                    </button>
+                    }}
+                  >
+                    Delete
+                  </button>
 
-                  </td>
+                  <button
+                    className="action-btn qr-btn"
+                    onClick={() =>
+                      setSelectedProduct(
+                        product
+                      )
+                    }
+                  >
+                    QR
+                  </button>
 
-                </tr>
-              ))}
+                </td>
 
-            </tbody>
+              </tr>
+            ))}
+    </tbody>
 
-          </table>
-
-        </div>
-
-        {/* QR */}
-
-        <div className="qr-section">
-          <ProductQR
-            product={selectedProduct}
-          />
-        </div>
-
-      </div>
+    </table>
 
     </div>
-  );
-}
 
-export default Inventory;
+    {/* QR */}
+
+    <div className="qr-section">
+      <ProductQR
+        product={selectedProduct}
+      />
+    </div>
+
+    </div>
+
+    </div>
+    );
+    }
+
+    export default Inventory;

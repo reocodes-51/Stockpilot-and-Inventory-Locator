@@ -1,12 +1,10 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 
-
 // REGISTER
 
 const registerUser = async (req, res) => {
   try {
-
     const { name, email, password } = req.body;
 
     const existingUser =
@@ -34,7 +32,6 @@ const registerUser = async (req, res) => {
   }
 };
 
-
 // LOGIN
 
 const loginUser = async (req, res) => {
@@ -51,6 +48,18 @@ const loginUser = async (req, res) => {
       });
     }
 
+    if (!user.currentStreak) {
+      user.currentStreak = 1;
+    }
+
+    if (!user.longestStreak) {
+      user.longestStreak = 1;
+    }
+
+    if (!user.lastLoginDate) {
+      user.lastLoginDate = new Date();
+    }
+
     const isMatch =
       await bcrypt.compare(
         password,
@@ -63,12 +72,59 @@ const loginUser = async (req, res) => {
       });
     }
 
+    const today = new Date();
+
+    const lastLogin = new Date(
+      user.lastLoginDate
+    );
+
+    const todayDate = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+
+    const lastLoginDate = new Date(
+      lastLogin.getFullYear(),
+      lastLogin.getMonth(),
+      lastLogin.getDate()
+    );
+
+    const diffDays = Math.floor(
+      (todayDate - lastLoginDate) /
+      (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays === 1) {
+      user.currentStreak += 1;
+    } else if (diffDays > 1) {
+      user.currentStreak = 1;
+    }
+
+    if (
+      user.currentStreak >
+      user.longestStreak
+    ) {
+      user.longestStreak =
+        user.currentStreak;
+    }
+
+    user.lastLoginDate = new Date();
+
+    console.log("USER BEFORE SAVE");
+    console.log(user);
+
+    await user.save();
+
+    console.log("USER SAVED");
+
     res.status(200).json({
       message: "Login Successful",
       user
     });
 
   } catch (error) {
+    console.error(error);
     res.status(500).json(error);
   }
 };
