@@ -181,6 +181,20 @@ http://localhost:5000
 
 ---
 
+
+## Deployment:
+
+The project is deployed using the following platforms:
+
+## Frontend
+- Platform: Vercel
+- Framework: React.js
+
+## Backend
+- Platform: Render
+- Framework: Node.js + Express.js
+
+
 ## 📸 Key Modules
 
 ### Dashboard
