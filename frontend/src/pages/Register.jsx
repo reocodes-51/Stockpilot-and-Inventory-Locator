@@ -11,6 +11,9 @@ function Register() {
   const [password, setPassword] =
     useState("");
 
+  const [role, setRole] =
+    useState("worker");
+
   const handleRegister = async (
     e
   ) => {
@@ -23,6 +26,7 @@ function Register() {
           name,
           email,
           password,
+          role,
         }
       );
 
@@ -107,6 +111,28 @@ function Register() {
               }
               required
             />
+
+            <label>
+              Role
+            </label>
+
+            <select
+              value={role}
+              onChange={(e) =>
+                setRole(
+                  e.target.value
+                )
+              }
+              required
+            >
+              <option value="worker">
+                Worker
+              </option>
+
+              <option value="admin">
+                Admin
+              </option>
+            </select>
 
             <button
               type="submit"

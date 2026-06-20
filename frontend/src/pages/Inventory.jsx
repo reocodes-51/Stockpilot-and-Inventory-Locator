@@ -107,9 +107,14 @@ function Inventory() {
 
         {/* ADD PRODUCT */}
 
-        <div className="form-section">
-          <ProductForm onAddProduct={addProduct} />
-        </div>
+        {localStorage.getItem("role") === "admin" && (
+          <div className="form-section">
+            <ProductForm
+              onAddProduct={addProduct}
+              products={products}
+            />
+          </div>
+        )}
 
         {/* SEARCH */}
 
@@ -246,31 +251,33 @@ function Inventory() {
 
         <td>
 
-          <button
-            className="action-btn edit-btn"
-            onClick={() =>
-              editProduct(product)
-            }
-          >
-            Edit
-          </button>
-
-          <button
-            className="action-btn delete-btn"
-            onClick={() => {
-              if (
-                window.confirm(
-                  "Delete this product?"
-                )
-              ) {
-                deleteProduct(
-                  product._id
-                );
+         {localStorage.getItem("role") === "admin" && (
+            <button
+              className="action-btn edit-btn"
+              onClick={() =>
+                editProduct(product)
               }
-            }}
-          >
-            Delete
-          </button>
+            >
+              Edit
+            </button>
+          )}
+
+            {localStorage.getItem("role") === "admin" && (
+              <button
+                className="action-btn delete-btn"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      "Delete this product?"
+                    )
+                  ) {
+                    deleteProduct(product._id);
+                  }
+                }}
+              >
+                Delete
+              </button>
+            )}
 
           <button
             className="action-btn qr-btn"

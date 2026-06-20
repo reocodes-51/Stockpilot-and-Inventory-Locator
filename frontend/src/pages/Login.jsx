@@ -12,34 +12,54 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const res = await API.post("/auth/login", {
+    const res = await API.post(
+      "/auth/login",
+      {
         email,
         password,
-      });
+      }
+    );
 
-      localStorage.setItem(
-        "user",
-        JSON.stringify(res.data.user)
-      );
+    // Save complete user object
 
-      alert("Login Successful");
+    localStorage.setItem(
+      "user",
+      JSON.stringify(res.data.user)
+    );
 
-      navigate("/dashboard");
-    } catch (error) {
-      alert(
-        error.response?.data?.message ||
-          "Login Failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Save role separately
+
+    localStorage.setItem(
+      "role",
+      res.data.user.role
+    );
+
+    localStorage.setItem(
+      "name",
+      res.data.user.name
+    );
+
+    alert(
+      `Login Successful (${res.data.user.role})`
+    );
+
+    navigate("/dashboard");
+
+  } catch (error) {
+    alert(
+      error.response?.data?.message ||
+      "Login Failed"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="login-container">

@@ -5,14 +5,19 @@ const bcrypt = require("bcryptjs");
 
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+    } = req.body;
 
     const existingUser =
       await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
-        message: "User already exists"
+        message: "User already exists",
       });
     }
 
@@ -22,12 +27,18 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+
+      // NEW
+      role: role || "worker",
     });
 
-    res.status(201).json(user);
-
+    res.status(201).json({
+      message: "User Registered",
+      user,
+    });
   } catch (error) {
+    console.error(error);
     res.status(500).json(error);
   }
 };
@@ -36,15 +47,15 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-
-    const { email, password } = req.body;
+    const { email, password } =
+      req.body;
 
     const user =
       await User.findOne({ email });
 
     if (!user) {
       return res.status(400).json({
-        message: "User not found"
+        message: "User not found",
       });
     }
 
@@ -57,7 +68,8 @@ const loginUser = async (req, res) => {
     }
 
     if (!user.lastLoginDate) {
-      user.lastLoginDate = new Date();
+      user.lastLoginDate =
+        new Date();
     }
 
     const isMatch =
@@ -68,7 +80,7 @@ const loginUser = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({
-        message: "Wrong password"
+        message: "Wrong password",
       });
     }
 
@@ -92,7 +104,7 @@ const loginUser = async (req, res) => {
 
     const diffDays = Math.floor(
       (todayDate - lastLoginDate) /
-      (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
     );
 
     if (diffDays === 1) {
@@ -109,20 +121,26 @@ const loginUser = async (req, res) => {
         user.currentStreak;
     }
 
-    user.lastLoginDate = new Date();
-
-    console.log("USER BEFORE SAVE");
-    console.log(user);
+    user.lastLoginDate =
+      new Date();
 
     await user.save();
 
-    console.log("USER SAVED");
-
     res.status(200).json({
-      message: "Login Successful",
-      user
-    });
+      message:
+        "Login Successful",
 
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        currentStreak:
+          user.currentStreak,
+        longestStreak:
+          user.longestStreak,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json(error);
@@ -131,5 +149,5 @@ const loginUser = async (req, res) => {
 
 module.exports = {
   registerUser,
-  loginUser
+  loginUser,
 };

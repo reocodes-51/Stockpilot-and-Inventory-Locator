@@ -65,6 +65,12 @@ function Dashboard() {
     0
   );
 
+  const role =
+  localStorage.getItem("role");
+
+const name =
+  localStorage.getItem("name");
+
   return (
     <div className="dashboard">
 
@@ -74,6 +80,14 @@ function Dashboard() {
 
         <div className="topbar">
           <div>
+
+            <h2>
+              Welcome {name}
+            </h2>
+
+            <p>
+              Logged in as {role}
+            </p>
             <h1>Dashboard</h1>
 
             <p>
