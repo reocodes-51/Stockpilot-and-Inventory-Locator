@@ -16,7 +16,7 @@
 
 .inventory-header {
   display: flex;
-  justify-content: space-between;
+  justify-content:space-evenly ;
   align-items: center;
   margin-bottom: 25px;
 }
@@ -67,6 +67,7 @@
   border-radius: 16px;
   padding: 20px;
   margin-bottom: 25px;
+  width: 100%;
 }
 
 /* ================= SEARCH ================= */
@@ -137,6 +138,7 @@
   border-radius: 18px;
   overflow-x: auto;
   overflow-y: hidden;
+  width: 100%;
 }
 
 .inventory-table {
@@ -150,7 +152,7 @@
 
 .inventory-table th {
   text-align: left;
-  padding: 18px;
+  padding: 13px;
   color: #cbd5e1;
   font-size: 14px;
   letter-spacing: 0.5px;

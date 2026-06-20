@@ -141,7 +141,7 @@ function WarehouseMap() {
               {[1, 2, 3, 4, 5].map((row) =>
                 [1, 2, 3, 4, 5].map((col) => {
                   const shelfCode =
-                    `${section}${(row - 1) * 5 + col}`;
+                  `${section}${row}${col}`;
 
                   const product =
                     getShelfProduct(shelfCode);
