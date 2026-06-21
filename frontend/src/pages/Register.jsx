@@ -8,38 +8,53 @@ function Register() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] =
-    useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("worker");
 
-  const [role, setRole] =
-    useState("worker");
+  const [otp, setOtp] = useState("");
+  const [showOtp, setShowOtp] = useState(false);
 
-  const handleRegister = async (
-    e
-  ) => {
+  // Send OTP
+  const handleSendOtp = async (e) => {
     e.preventDefault();
 
     try {
-      await API.post(
-        "/auth/register",
-        {
-          name,
-          email,
-          password,
-          role,
-        }
+      await API.post("/auth/send-otp", {
+        name,
+        email,
+        password,
+        role,
+      });
+
+      alert("OTP sent to your email!");
+      setShowOtp(true);
+
+    } catch (error) {
+      alert(
+        error.response?.data?.message ||
+        "Failed to send OTP"
       );
+    }
+  };
+
+  // Verify OTP
+  const handleVerifyOtp = async () => {
+    try {
+      await API.post("/auth/verify-otp", {
+        email,
+        otp,
+      });
 
       alert(
-        "Registration Successful"
+        "Account Created Successfully!"
       );
 
       navigate("/");
+
     } catch (error) {
       alert(
-        error.response?.data
-          ?.message ||
-          "Registration Failed"
+        error.response?.data?.message ||
+        "OTP Verification Failed"
       );
     }
   };
@@ -63,11 +78,7 @@ function Register() {
 
           <h1>Create Account</h1>
 
-          <form
-            onSubmit={
-              handleRegister
-            }
-          >
+          <form onSubmit={handleSendOtp}>
 
             <label>
               Full Name
@@ -77,11 +88,10 @@ function Register() {
               type="text"
               value={name}
               onChange={(e) =>
-                setName(
-                  e.target.value
-                )
+                setName(e.target.value)
               }
               required
+              disabled={showOtp}
             />
 
             <label>Email</label>
@@ -90,11 +100,10 @@ function Register() {
               type="email"
               value={email}
               onChange={(e) =>
-                setEmail(
-                  e.target.value
-                )
+                setEmail(e.target.value)
               }
               required
+              disabled={showOtp}
             />
 
             <label>
@@ -110,6 +119,7 @@ function Register() {
                 )
               }
               required
+              disabled={showOtp}
             />
 
             <label>
@@ -124,6 +134,7 @@ function Register() {
                 )
               }
               required
+              disabled={showOtp}
             >
               <option value="worker">
                 Worker
@@ -134,18 +145,47 @@ function Register() {
               </option>
             </select>
 
-            <button
-              type="submit"
-              className="signin-btn"
-            >
-              Register
-            </button>
+            {!showOtp ? (
+              <button
+                type="submit"
+                className="signin-btn"
+              >
+                Send OTP
+              </button>
+            ) : (
+              <>
+                <label>
+                  Enter OTP
+                </label>
+
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) =>
+                    setOtp(
+                      e.target.value
+                    )
+                  }
+                  placeholder="Enter OTP"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="signin-btn"
+                  onClick={
+                    handleVerifyOtp
+                  }
+                >
+                  Verify OTP
+                </button>
+              </>
+            )}
 
           </form>
 
           <div className="register-link">
-            Already have an
-            account?
+            Already have an account?
 
             <span
               onClick={() =>
@@ -154,7 +194,6 @@ function Register() {
             >
               Login
             </span>
-
           </div>
 
         </div>

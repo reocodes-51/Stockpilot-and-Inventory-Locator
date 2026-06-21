@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema(
       default: "worker",
     },
 
+        otp: String,
+        otpExpiry: Date,
+
     currentStreak: {
       type: Number,
       default: 1,

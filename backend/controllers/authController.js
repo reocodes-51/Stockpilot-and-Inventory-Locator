@@ -1,9 +1,12 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const sendOTP = require("../utils/sendEmail");
+const pendingUsers = require("../tempOtpStore");
 
-// REGISTER
-
-const registerUser = async (req, res) => {
+// ====================
+// SEND OTP
+// ====================
+const sendOtp = async (req, res) => {
   try {
     const {
       name,
@@ -17,35 +20,165 @@ const registerUser = async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({
-        message: "User already exists",
+        message:
+          "Email already registered",
+      });
+    }
+
+    const otp = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    pendingUsers[email] = {
+      name,
+      email,
+      password,
+      role,
+      otp,
+      expiresAt:
+        Date.now() + 5 * 60 * 1000,
+    };
+
+    await sendOTP(email, otp);
+
+    res.status(200).json({
+      message:
+        "OTP sent successfully",
+    });
+  } catch (error) {
+  console.error(error);
+
+  res.status(500).json({
+    message: "Failed to send OTP",
+  });
+}
+};
+
+// ====================
+// VERIFY OTP & CREATE ACCOUNT
+// ====================
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const userData =
+      pendingUsers[email];
+
+    if (!userData) {
+      return res.status(400).json({
+        message:
+          "OTP expired or not found",
+      });
+    }
+
+    if (userData.otp !== otp) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+      });
+    }
+
+    if (
+      userData.expiresAt <
+      Date.now()
+    ) {
+      delete pendingUsers[email];
+
+      return res.status(400).json({
+        message: "OTP expired",
+      });
+    }
+
+    const hashedPassword =
+      await bcrypt.hash(
+        userData.password,
+        10
+      );
+
+    const newUser =
+      await User.create({
+        name: userData.name,
+        email: userData.email,
+        password: hashedPassword,
+        role:
+          userData.role ||
+          "worker",
+      });
+
+    delete pendingUsers[email];
+
+    res.status(201).json({
+      message:
+        "Account created successfully",
+      user: newUser,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message:
+        "Failed to verify OTP",
+    });
+  }
+};
+
+// ====================
+// REGISTER (OPTIONAL)
+// ====================
+// Not used when OTP registration is enabled
+const registerUser = async (
+  req,
+  res
+) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      role,
+    } = req.body;
+
+    const existingUser =
+      await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message:
+          "User already exists",
       });
     }
 
     const hashedPassword =
       await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-
-      // NEW
-      role: role || "worker",
-    });
+    const user =
+      await User.create({
+        name,
+        email,
+        password:
+          hashedPassword,
+        role:
+          role || "worker",
+      });
 
     res.status(201).json({
-      message: "User Registered",
+      message:
+        "User Registered",
       user,
     });
   } catch (error) {
     console.error(error);
+
     res.status(500).json(error);
   }
 };
 
+// ====================
 // LOGIN
-
-const loginUser = async (req, res) => {
+// ====================
+const loginUser = async (
+  req,
+  res
+) => {
   try {
     const { email, password } =
       req.body;
@@ -55,21 +188,9 @@ const loginUser = async (req, res) => {
 
     if (!user) {
       return res.status(400).json({
-        message: "User not found",
+        message:
+          "User not found",
       });
-    }
-
-    if (!user.currentStreak) {
-      user.currentStreak = 1;
-    }
-
-    if (!user.longestStreak) {
-      user.longestStreak = 1;
-    }
-
-    if (!user.lastLoginDate) {
-      user.lastLoginDate =
-        new Date();
     }
 
     const isMatch =
@@ -80,15 +201,27 @@ const loginUser = async (req, res) => {
 
     if (!isMatch) {
       return res.status(400).json({
-        message: "Wrong password",
+        message:
+          "Wrong password",
       });
     }
 
+    if (!user.currentStreak)
+      user.currentStreak = 1;
+
+    if (!user.longestStreak)
+      user.longestStreak = 1;
+
+    if (!user.lastLoginDate)
+      user.lastLoginDate =
+        new Date();
+
     const today = new Date();
 
-    const lastLogin = new Date(
-      user.lastLoginDate
-    );
+    const lastLogin =
+      new Date(
+        user.lastLoginDate
+      );
 
     const todayDate = new Date(
       today.getFullYear(),
@@ -96,16 +229,22 @@ const loginUser = async (req, res) => {
       today.getDate()
     );
 
-    const lastLoginDate = new Date(
-      lastLogin.getFullYear(),
-      lastLogin.getMonth(),
-      lastLogin.getDate()
-    );
+    const lastLoginDate =
+      new Date(
+        lastLogin.getFullYear(),
+        lastLogin.getMonth(),
+        lastLogin.getDate()
+      );
 
-    const diffDays = Math.floor(
-      (todayDate - lastLoginDate) /
-        (1000 * 60 * 60 * 24)
-    );
+    const diffDays =
+      Math.floor(
+        (todayDate -
+          lastLoginDate) /
+          (1000 *
+            60 *
+            60 *
+            24)
+      );
 
     if (diffDays === 1) {
       user.currentStreak += 1;
@@ -143,11 +282,14 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+
     res.status(500).json(error);
   }
 };
 
 module.exports = {
+  sendOtp,
+  verifyOtp,
   registerUser,
   loginUser,
 };
