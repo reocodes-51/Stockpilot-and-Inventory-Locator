@@ -61,13 +61,11 @@ const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    const userData =
-      pendingUsers[email];
+    const userData = pendingUsers[email];
 
     if (!userData) {
       return res.status(400).json({
-        message:
-          "OTP expired or not found",
+        message: "OTP expired or not found",
       });
     }
 
@@ -77,10 +75,7 @@ const verifyOtp = async (req, res) => {
       });
     }
 
-    if (
-      userData.expiresAt <
-      Date.now()
-    ) {
+    if (userData.expiresAt < Date.now()) {
       delete pendingUsers[email];
 
       return res.status(400).json({
@@ -88,35 +83,31 @@ const verifyOtp = async (req, res) => {
       });
     }
 
-    const hashedPassword =
-      await bcrypt.hash(
-        userData.password,
-        10
-      );
+    const hashedPassword = await bcrypt.hash(
+      userData.password,
+      10
+    );
 
-    const newUser =
-      await User.create({
-        name: userData.name,
-        email: userData.email,
-        password: hashedPassword,
-        role:
-          userData.role ||
-          "worker",
-      });
+    const newUser = await User.create({
+      name: userData.name,
+      email: userData.email,
+      password: hashedPassword,
+      role: userData.role || "worker",
+    });
 
     delete pendingUsers[email];
 
     res.status(201).json({
-      message:
-        "Account created successfully",
+      message: "Account created successfully",
       user: newUser,
     });
+
   } catch (error) {
+    console.error("VERIFY OTP ERROR:");
     console.error(error);
 
     res.status(500).json({
-      message:
-        "Failed to verify OTP",
+      message: error.message,
     });
   }
 };

@@ -14,46 +14,63 @@ function Register() {
   const [otp, setOtp] = useState("");
   const [showOtp, setShowOtp] = useState(false);
 
-  // Send OTP
+  // SEND OTP
   const handleSendOtp = async (e) => {
     e.preventDefault();
 
+    alert("Button Clicked");
+
     try {
-      await API.post("/auth/send-otp", {
-        name,
-        email,
-        password,
-        role,
-      });
+      const res = await API.post(
+        "/auth/send-otp",
+        {
+          name,
+          email,
+          password,
+          role,
+        }
+      );
+
+      console.log(res.data);
 
       alert("OTP sent to your email!");
-      setShowOtp(true);
 
+      setShowOtp(true);
     } catch (error) {
+      console.error(error);
+
       alert(
         error.response?.data?.message ||
+        error.message ||
         "Failed to send OTP"
       );
     }
   };
 
-  // Verify OTP
+  // VERIFY OTP
   const handleVerifyOtp = async () => {
     try {
-      await API.post("/auth/verify-otp", {
-        email,
-        otp,
-      });
+      const res = await API.post(
+        "/auth/verify-otp",
+        {
+          email,
+          otp,
+        }
+      );
+
+      console.log(res.data);
 
       alert(
         "Account Created Successfully!"
       );
 
       navigate("/");
-
     } catch (error) {
+      console.error(error);
+
       alert(
         error.response?.data?.message ||
+        error.message ||
         "OTP Verification Failed"
       );
     }
@@ -149,6 +166,9 @@ function Register() {
               <button
                 type="submit"
                 className="signin-btn"
+                style={{
+                  cursor: "pointer",
+                }}
               >
                 Send OTP
               </button>
