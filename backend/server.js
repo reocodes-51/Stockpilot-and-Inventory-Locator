@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const productRoutes = require("./routes/productRoutes");
 const authRoutes = require("./routes/authRoutes");
 const activityRoutes = require("./routes/activityRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 const app = express();
 
 // Connect Database
@@ -28,6 +29,7 @@ app.use("/api/products", productRoutes);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/activities", activityRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Server
 const PORT = process.env.PORT || 5000;

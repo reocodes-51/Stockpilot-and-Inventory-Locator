@@ -2,3 +2,7 @@ node_modules/
 frontend/node_modules/
 dist/
 .env
+
+# Environment files
+
+**/.env
