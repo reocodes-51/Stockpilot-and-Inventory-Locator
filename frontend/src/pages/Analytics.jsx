@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 import "./Analytics.css";
 import Sidebar from "../components/Sidebar";
-
+import { generateAIInsights } from "../services/aiApi";
 import {
   ResponsiveContainer,
   BarChart,
@@ -13,9 +13,12 @@ import {
   LineChart,
   Line,
 } from "recharts";
+import ReactMarkdown from "react-markdown";
 
 function Analytics() {
   const [products, setProducts] = useState([]);
+  const [aiSummary, setAiSummary] = useState("");
+  const [loadingAI, setLoadingAI] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -60,6 +63,16 @@ function Analytics() {
     { month: "Jun", added: 24 },
   ];
 
+  const handleAIInsights = async () => {
+  setLoadingAI(true);
+
+  const summary = await generateAIInsights();
+
+  setAiSummary(summary);
+
+  setLoadingAI(false);
+};
+
 return (
   <div className="dashboard">
 
@@ -103,6 +116,42 @@ return (
             ₹{avgValue.toFixed(0)}
           </h2>
         </div>
+
+        <div className="analytics-panel">
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}
+        >
+
+          <h2>AI Warehouse Assistant</h2>
+
+          <button
+            className="generate-ai-btn"
+            onClick={handleAIInsights}
+          >
+            Generate AI Insights
+          </button>
+
+        </div>
+
+        {loadingAI ? (
+
+          <p>Generating AI Insights...</p>
+
+        ) : (
+
+      <div className="ai-report">
+        <ReactMarkdown>{aiSummary}</ReactMarkdown>
+      </div>
+
+        )}
+
+      </div>
 
       </div>
 

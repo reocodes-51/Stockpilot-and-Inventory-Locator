@@ -8,6 +8,7 @@ import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import Register from "./pages/Register";
 import Activity from "./pages/Activity";
+import Chatbot from "./components/Chatbot";
 
 function MyApp() {
   return (

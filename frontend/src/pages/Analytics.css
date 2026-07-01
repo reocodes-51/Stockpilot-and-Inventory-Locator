@@ -55,3 +55,48 @@
 .analytics-table tr {
   border-bottom: 1px solid #1e293b;
 }
+
+.generate-ai-btn{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:10px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.generate-ai-btn:hover{
+    background:#1d4ed8;
+}
+
+.analytics-panel{
+    margin-top:25px;
+}
+
+.ai-report{
+    background:#020817;
+    padding:20px;
+    border-radius:15px;
+    line-height:1.8;
+}
+
+.ai-report h3{
+    color:#3b82f6;
+    margin:15px 0;
+}
+
+.ai-report h4{
+    color:#60a5fa;
+    margin:10px 0;
+}
+
+.ai-report ul{
+    margin-left:20px;
+}
+
+.ai-report li{
+    margin:8px 0;
+}

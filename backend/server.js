@@ -8,6 +8,7 @@ const productRoutes = require("./routes/productRoutes");
 const authRoutes = require("./routes/authRoutes");
 const activityRoutes = require("./routes/activityRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const app = express();
 
 // Connect Database
@@ -30,6 +31,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/activities", activityRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Server
 const PORT = process.env.PORT || 5000;
